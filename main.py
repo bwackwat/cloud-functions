@@ -14,8 +14,10 @@ def index(request):
     if request.args and "usernmae" in request.args:
         username = request.args["username"]
 
-    if username is None or key is None:
-        return "403"
+    if username is None:
+        return "No username param"
+    if key is None:
+        return "No key param"
 
 
 
