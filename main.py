@@ -28,6 +28,11 @@ def index(request):
     if key != mykey:
         return "Bad key."
 
+    channel_url = None
+    playlist_url = None
+    playlist_id = None
+    channel_json = None
+    playlist_json = None
     try:
         channel_response = requests.get(
             "https://www.googleapis.com/youtube/v3/channels",
@@ -40,19 +45,22 @@ def index(request):
                 "Accept": "application/json"
             }
         )
+        channel_url = channel_response.request.url
         channel_json = channel_response.json()
-        next_playlist = channel_json["data"]["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-        playlist_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/playlists",
-            params={
-                "key": ytkey,
-                "part": "snippet,contentDetails,status,player,id",
-                "id": next_playlist
-            },
-            headers={
-                "Accept": "application/json"
-            }
-        )
+        playlist_id = channel_json["data"]["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        # playlist_response = requests.get(
+        #     "https://www.googleapis.com/youtube/v3/playlists",
+        #     params={
+        #         "key": ytkey,
+        #         "part": "snippet,contentDetails,status,player,id",
+        #         "id": playlist_id
+        #     },
+        #     headers={
+        #         "Accept": "application/json"
+        #     }
+        # )
+        # playlist_url = playlist_response.request.url
+        # playlist_json = playlist_response.json()
     except Exception as e:
         return json.dumps(
             {"exception": str(e)},
@@ -60,11 +68,11 @@ def index(request):
         )
 
     jresponse = {
-        "channel_url": channel_response.request.url,
-        "playlist_url": playlist_response.request.url,
-        "playlist_id": next_playlist,
+        "channel_url": channel_url,
+        "playlist_url": playlist_url,
+        "playlist_id": playlist_id,
         "channel_json": channel_json,
-        "playlist_json": playlist_response.json()
+        "playlist_json": playlist_json
     }
 
     return json.dumps(jresponse, indent=4)
