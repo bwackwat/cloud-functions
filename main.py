@@ -11,7 +11,7 @@ def index(request):
     username = None
     if request.args and "key" in request.args:
         key = request.args["key"]
-    if request.args and "usernmae" in request.args:
+    if request.args and "username" in request.args:
         username = request.args["username"]
 
     if username is None:
