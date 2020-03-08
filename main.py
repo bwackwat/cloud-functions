@@ -1,4 +1,4 @@
-import requests
+import requests, json
 
 def index(request):
     #request_json = request.get_json(silent=True)
@@ -14,7 +14,7 @@ def index(request):
     if request.args and "usernmae" in request.args:
         username = request.args["username"]
 
-    if key is None:
+    if username is None or key is None:
         return "403"
 
 
@@ -35,5 +35,9 @@ def index(request):
     except Exception as e:
         return str(e)
 
+    jresponse = {
+        "url": response.request.url,
+        "data": response.json
+    }
 
-    return response.request.url + "\n" + response.text
+    return json.dumps(jresponse, indent=4)
