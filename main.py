@@ -32,5 +32,4 @@ def index(request):
         }
     )
 
-    return str(response)
-    
+    return response.text()
