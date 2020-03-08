@@ -19,17 +19,20 @@ def index(request):
 
 
 
-    response = requests.get(
-        "https://www.googleapis.com/youtube/v3/channels",
-        params={
-            "key": key,
-            "part": "snippet,contentDetails,statistics",
-            "forUsername": username
-        },
-        headers={
-            # "Authorization": "Bearer " + key,
-            "Accept": "application/json"
-        }
-    )
+    try:
+        response = requests.get(
+            "https://www.googleapis.com/youtube/v3/channels",
+            params={
+                "key": key,
+                "part": "snippet,contentDetails,statistics",
+                "forUsername": username
+            },
+            headers={
+                # "Authorization": "Bearer " + key,
+                "Accept": "application/json"
+            }
+        )
+    except Exception as e:
+        return str(e)
 
     return response.text()
