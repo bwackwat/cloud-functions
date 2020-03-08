@@ -54,7 +54,10 @@ def index(request):
             }
         )
     except Exception as e:
-        return str(e)
+        return json.dumps(
+            {"exception": str(e)},
+            indent=4
+        )
 
     jresponse = {
         "channel_url": channel_response.request.url,
