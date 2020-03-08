@@ -39,7 +39,7 @@ def index(request):
 
     jresponse = {
         "url": response.request.url,
-        "data": response.json
+        "data": response.json()
     }
 
     return json.dumps(jresponse, indent=4)
