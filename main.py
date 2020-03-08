@@ -38,7 +38,7 @@ def index(request):
             "https://www.googleapis.com/youtube/v3/channels",
             params={
                 "key": ytkey,
-                "part": "snippet,contentDetails,statistics",
+                "part": "snippet,contentDetails,statistics,id",
                 "forUsername": username
             },
             headers={
@@ -52,8 +52,8 @@ def index(request):
             "https://www.googleapis.com/youtube/v3/playlistItems",
             params={
                 "key": ytkey,
-                "part": "snippet,contentDetails,status",
-                "id": playlist_id
+                "part": "snippet,contentDetails,status,id",
+                "playlistId": playlist_id
             },
             headers={
                 "Accept": "application/json"
