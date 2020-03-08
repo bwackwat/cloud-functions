@@ -35,4 +35,4 @@ def index(request):
     except Exception as e:
         return str(e)
 
-    return response.text()
+    return response.text
