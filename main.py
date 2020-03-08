@@ -47,7 +47,7 @@ def index(request):
         )
         channel_url = channel_response.request.url
         channel_json = channel_response.json()
-        playlist_id = channel_json["data"]["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        playlist_id = channel_json["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
         # playlist_response = requests.get(
         #     "https://www.googleapis.com/youtube/v3/playlists",
         #     params={
