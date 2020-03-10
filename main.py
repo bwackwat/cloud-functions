@@ -51,7 +51,8 @@ def index(request):
     jresponse = {}
 
     try:
-        data1_ids = ",".join([data[0] for data in data1])
+        data1_ids = ",".join([data1[i] for i in range(10)])
+        #data1_ids = ",".join([data[0] for data in data1])
         videos_response = requests.get(
             "https://www.googleapis.com/youtube/v3/videos",
             params={
