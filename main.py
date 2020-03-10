@@ -1,13 +1,30 @@
 import requests, json, os
 
+response = {}
+ytkey = os.environ.get("ytkey")
+
+def get_videos(ids):
+    response = {}
+    global ytkey
+    try:
+        videos_response = requests.get(
+            "https://www.googleapis.com/youtube/v3/videos",
+            params={
+                "key": ytkey,
+                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
+                "id": ids
+            },
+            headers={
+                "Accept": "application/json"
+            }
+        )
+        response["videos_url"] = videos_response.request.url
+        response["videos_json"] = videos_response.json()
+    except Exception as e:
+        response["exception"] = str(vars(e))
+    return response
+
 def index(request):
-    #request_json = request.get_json(silent=True)
-    #request_args = request.args
-
-    #if request_json and 'name' in request_json:
-    #    name = request_json['name']
-
-    ytkey = os.environ.get("ytkey")
     mykey = os.environ.get("mykey")
     if ytkey is None:
         return "No YouTube key."
@@ -48,38 +65,16 @@ def index(request):
             # IDm, season #, [0, next names are people in thumbnail][1 quest in video]
             data3.append([ldata[0], ldata[1], ldata[2], ldata[3]])
 
-    jresponse = {}
+
+    global response
+
+    data1_ids = ",".join([data1[i] for i in range(10)])
+    response["ids"] = data1[0][0]
+    #data1_ids = ",".join([data[0] for data in data1])
+    response["videos1"] = get_videos(data1[0][0])
+    response["videos2"] = get_videos(data1_ids)
 
     try:
-        data1_ids = ",".join([data1[i] for i in range(10)])
-        jresponse["ids"] = data1[0][0]
-        #data1_ids = ",".join([data[0] for data in data1])
-        videos_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/videos",
-            params={
-                "key": ytkey,
-                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
-                "id": data1_ids
-            },
-            headers={
-                "Accept": "application/json"
-            }
-        )
-        jresponse["videos1_url"] = videos_response.request.url
-        jresponse["videos1_json"] = videos_response.json()
-        videos_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/videos",
-            params={
-                "key": ytkey,
-                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
-                "id": data1_ids
-            },
-            headers={
-                "Accept": "application/json"
-            }
-        )
-        jresponse["videos2_url"] = videos_response.request.url
-        jresponse["videos2_json"] = videos_response.json()
         # channel_response = requests.get(
         #     "https://www.googleapis.com/youtube/v3/channels",
         #     params={
@@ -107,8 +102,8 @@ def index(request):
         # )
         # playlist_url = playlist_response.request.url
         # playlist_json = playlist_response.json()
-
+        pass
     except Exception as e:
-        jresponse["exception"] = str(vars(e))
+        response["exception"] = str(vars(e))
 
-    return "<pre>" + json.dumps(jresponse, indent=4) + "</pre>"
+    return "<pre>" + json.dumps(response, indent=4) + "</pre>"
