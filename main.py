@@ -8,6 +8,7 @@ ytkey = os.environ.get("ytkey")
 global mykey
 mykey = os.environ.get("mykey")
 
+
 def get_videos(ids):
     response = {}
     global ytkey
@@ -24,7 +25,7 @@ def get_videos(ids):
     )
     # response["videos_url"] = videos_response.request.url
     rjson = videos_response.json()
-    response["videos_json"] = videos_response.json()
+    #response["videos_json"] = videos_response.json()
     response["data"] = []
     for video in rjson["items"]:
         response["data"].append({
@@ -33,6 +34,7 @@ def get_videos(ids):
             "statistics": video["statistics"]
         })
     return response
+
 
 def index(request):
     if ytkey is None:
@@ -118,9 +120,11 @@ def index(request):
 
     return "<pre>" + json.dumps(response, indent=4) + "</pre>"
 
+
 class Request():
     def __init__(self, args):
         self.args = args
+
 
 if __name__ == "__main__":
     ytkey = sys.argv[3]
@@ -129,3 +133,4 @@ if __name__ == "__main__":
         "key": sys.argv[1],
         "username": sys.argv[2]
     }))))
+
