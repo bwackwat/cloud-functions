@@ -8,4 +8,4 @@ git commit -m "New commit!"
 
 git push origin master
 
-gcloud functions deploy function-1
+#gcloud functions deploy function-1
