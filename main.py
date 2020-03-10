@@ -52,6 +52,7 @@ def index(request):
 
     try:
         data1_ids = ",".join([data1[i] for i in range(10)])
+        jresponse["ids"] = data1_ids
         #data1_ids = ",".join([data[0] for data in data1])
         videos_response = requests.get(
             "https://www.googleapis.com/youtube/v3/videos",
@@ -64,7 +65,6 @@ def index(request):
                 "Accept": "application/json"
             }
         )
-        jresponse["ids"] = data1_ids
         jresponse["videos_url"] = videos_response.request.url
         jresponse["videos_json"] = videos_response.json()
         # channel_response = requests.get(
@@ -96,6 +96,6 @@ def index(request):
         # playlist_json = playlist_response.json()
 
     except Exception as e:
-        jresponse["exception"]= str(vars(e))
+        jresponse["exception"] = str(vars(e))
 
     return "<pre>" + json.dumps(jresponse, indent=4) + "</pre>"
