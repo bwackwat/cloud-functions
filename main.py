@@ -56,7 +56,7 @@ def index(request):
             "https://www.googleapis.com/youtube/v3/videos",
             params={
                 "key": ytkey,
-                "part": "processingDetails,recordingDetails,fileDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails,suggestions",
+                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
                 "id": data1[0][0]
             },
             headers={
