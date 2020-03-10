@@ -96,9 +96,6 @@ def index(request):
         # playlist_json = playlist_response.json()
 
     except Exception as e:
-        return json.dumps(
-            {"exception": str(e)},
-            indent=4
-        )
+        jresponse["exception"]= str(vars(e))
 
     return "<pre>" + json.dumps(jresponse, indent=4) + "</pre>"
