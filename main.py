@@ -19,7 +19,15 @@ def get_videos(ids):
             }
         )
         response["videos_url"] = videos_response.request.url
-        response["videos_json"] = videos_response.json()
+        rjson = videos_response.json()
+        response["videos_json"]
+        response["data"] = []
+        for video in rjson["items"]:
+            response["data"].append({
+                "id": video["id"],
+                "title": video["snippets"]["title"],
+                "likes": video["statistics"]["likeCount"]
+            })
     except Exception as e:
         response["exception"] = str(vars(e))
     return response
@@ -68,11 +76,12 @@ def index(request):
 
     global response
 
-    data1_ids = ",".join([data1[i][0] for i in range(10)])
+    #data1_ids = ",".join([data1[i][0] for i in range(10)])
+    data1_ids = ",".join([data1[i][0] for i in len(data1)])
     response["ids"] = data1[0][0]
     #data1_ids = ",".join([data[0] for data in data1])
-    response["videos1"] = get_videos(data1[0][0])
-    response["videos2"] = get_videos(data1_ids)
+    #response["videos1"] = get_videos(data1[0][0])
+    response["result"] = get_videos(data1_ids)
 
     try:
         # channel_response = requests.get(
