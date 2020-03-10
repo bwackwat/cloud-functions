@@ -1,39 +1,41 @@
-import requests, json, os
+#!/usr/local/bin/python3
+
+import requests, json, os, sys, json
 
 response = {}
+global ytkey
 ytkey = os.environ.get("ytkey")
+global mykey
+mykey = os.environ.get("mykey")
 
 def get_videos(ids):
     response = {}
     global ytkey
-    try:
-        videos_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/videos",
-            params={
-                "key": ytkey,
-                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
-                "id": ids
-            },
-            headers={
-                "Accept": "application/json"
-            }
-        )
-        response["videos_url"] = videos_response.request.url
-        rjson = videos_response.json()
-        response["videos_json"]
-        response["data"] = []
-        for video in rjson["items"]:
-            response["data"].append({
-                "id": video["id"],
-                "title": video["snippets"]["title"],
-                "likes": video["statistics"]["likeCount"]
-            })
-    except Exception as e:
-        response["exception"] = str(vars(e))
+    print(ids)
+    videos_response = requests.get(
+        "https://www.googleapis.com/youtube/v3/videos",
+        params={
+            "key": ytkey,
+            "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
+            "id": ids
+        },
+        headers={
+            "Accept": "application/json"
+        }
+    )
+    # response["videos_url"] = videos_response.request.url
+    rjson = videos_response.json()
+    response["videos_json"] = videos_response.json()
+    response["data"] = []
+    for video in rjson["items"]:
+        response["data"].append({
+            "id": video["id"],
+            "title": video["snippet"]["title"],
+            "likes": video["statistics"]["likeCount"]
+        })
     return response
 
 def index(request):
-    mykey = os.environ.get("mykey")
     if ytkey is None:
         return "No YouTube key."
     if mykey is None:
@@ -77,7 +79,7 @@ def index(request):
     global response
 
     #data1_ids = ",".join([data1[i][0] for i in range(10)])
-    data1_ids = ",".join([data1[i][0] for i in len(data1)])
+    data1_ids = ",".join([data1[i][0] for i in range(50)])
     response["ids"] = data1[0][0]
     #data1_ids = ",".join([data[0] for data in data1])
     #response["videos1"] = get_videos(data1[0][0])
@@ -115,4 +117,16 @@ def index(request):
     except Exception as e:
         response["exception"] = str(vars(e))
 
-    return "<pre>" + json.dumps(response, indent=4) + "</pre>"
+    return "<code>" + json.dumps(response, indent=4) + "</code>"
+
+class Request():
+    def __init__(self, args):
+        self.args = args
+
+if __name__ == "__main__":
+    ytkey = sys.argv[3]
+    mykey = sys.argv[1]
+    print(json.dumps(index(Request({
+        "key": sys.argv[1],
+        "username": sys.argv[2]
+    }))))
