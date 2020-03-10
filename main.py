@@ -26,7 +26,7 @@ def get_videos(ids):
     # response["videos_url"] = videos_response.request.url
     rjson = videos_response.json()
     #response["videos_json"] = videos_response.json()
-    response["data"] = []
+    response = []
     for video in rjson["items"]:
         response["data"].append({
             "id": video["id"],
@@ -81,13 +81,13 @@ def index(request):
 
     #data1_ids = ",".join([data1[i][0] for i in range(10)])
     data1_ids = ",".join([data1[i][0] for i in range(50)])
-    response["ids"] = data1[0][0]
+    #response["ids"] = data1[0][0]
     #data1_ids = ",".join([data[0] for data in data1])
     #response["videos1"] = get_videos(data1[0][0])
     response["result"] = get_videos(data1_ids)
 
     try:
-        # channel_response = requests.get(
+        # channel_response = requests.get(e
         #     "https://www.googleapis.com/youtube/v3/channels",
         #     params={
         #         "key": ytkey,
