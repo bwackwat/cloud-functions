@@ -57,7 +57,7 @@ def index(request):
             params={
                 "key": ytkey,
                 "part": "processingDetails,recordingDetails,fileDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails,suggestions,",
-                "id": data1_ids
+                "id": data[0][0]
             },
             headers={
                 "Accept": "application/json"
