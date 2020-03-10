@@ -30,7 +30,7 @@ def get_videos(ids):
         response["data"].append({
             "id": video["id"],
             "title": video["snippet"]["title"],
-            "likes": video["statistics"]["likeCount"]
+            "statistics": video["statistics"]
         })
     return response
 
@@ -116,7 +116,7 @@ def index(request):
     except Exception as e:
         response["exception"] = str(vars(e))
 
-    return "<code>" + json.dumps(response, indent=4) + "</code>"
+    return "<pre>" + json.dumps(response, indent=4) + "</pre>"
 
 class Request():
     def __init__(self, args):
