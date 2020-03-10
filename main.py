@@ -28,7 +28,7 @@ def get_videos(ids):
     #response["videos_json"] = videos_response.json()
     response = []
     for video in rjson["items"]:
-        response["data"].append({
+        response.append({
             "id": video["id"],
             "title": video["snippet"]["title"],
             "statistics": video["statistics"]
