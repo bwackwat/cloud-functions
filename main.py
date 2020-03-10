@@ -52,7 +52,7 @@ def index(request):
 
     try:
         data1_ids = ",".join([data1[i] for i in range(10)])
-        jresponse["ids"] = data1_ids
+        jresponse["ids"] = data1[0][0]
         #data1_ids = ",".join([data[0] for data in data1])
         videos_response = requests.get(
             "https://www.googleapis.com/youtube/v3/videos",
@@ -65,8 +65,21 @@ def index(request):
                 "Accept": "application/json"
             }
         )
-        jresponse["videos_url"] = videos_response.request.url
-        jresponse["videos_json"] = videos_response.json()
+        jresponse["videos1_url"] = videos_response.request.url
+        jresponse["videos1_json"] = videos_response.json()
+        videos_response = requests.get(
+            "https://www.googleapis.com/youtube/v3/videos",
+            params={
+                "key": ytkey,
+                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
+                "id": data1_ids
+            },
+            headers={
+                "Accept": "application/json"
+            }
+        )
+        jresponse["videos2_url"] = videos_response.request.url
+        jresponse["videos2_json"] = videos_response.json()
         # channel_response = requests.get(
         #     "https://www.googleapis.com/youtube/v3/channels",
         #     params={
