@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>Data</title>
+    </head>
+    <body>
+        <pre id="data"></pre>
+    </body>
+    <script type="text/javascript">
+        var urlParams;
+        function callAPI(method, callback){
+            var sendData = JSON.stringify(data);
+            var apiUrl = "https://us-central1-api-testing-270519.cloudfunctions.net/function-1"
+            var route = "?key=" + urlParams["key"] + "&username=" + urlParams["username"]
+            var http = new XMLHttpRequest();
+            http.open(method, apiUrl + route, true);
+            http.setRequestHeader("Content-Type", "application/json");
+            if(localStorage.getItem(localStorageSessionKey) !== null){
+                http.setRequestHeader(localStorageSessionKey, localStorage.getItem(localStorageSessionKey));
+            }
+            http.onreadystatechange = function(){
+                console.log("RECV: " + http.responseText);
+                if(http.readyState == 4){
+                    if(http.status == 200){
+                        localStorage.setItem(localStorageSessionKey, http.getResponseHeader(localStorageSessionKey));
+                        try{
+                            callback(JSON.parse(http.responseText));
+                        }catch(e){
+                            callback(http.responseText);
+                        }
+                    }else{
+                        callback({"error":"Bad response from server..."});
+                    }
+                }else if(http.readyState == 3){
+                }else if(http.readyState === 2){
+                }else if(http.readyState == 1){
+                    callback({"error":"Could not establish connection."})
+                }else if(http.readyState == 0){
+                    callback({"error":"Did not start connection."})
+                }else{
+                    alert("HTTP ERROR!");
+                }
+            };
+            http.send(sendData);
+        }
+        window.onpopstate = function () {
+            var match;
+            var pl = /\+/g;  // Regex for replacing addition symbol with a space
+            var search = /([^&=]+)=?([^&]*)/g;
+            var decode = function (s) {
+                return decodeURIComponent(s.replace(pl, " "));
+            };
+            var query  = window.location.search.substring(1);
+
+            urlParams = {};
+            while (match = search.exec(query))
+                urlParams[decode(match[1])] = decode(match[2]);
+
+            callAPI("GET", function(data){
+                document.getElementById("data").innerHTML = data;
+            });
+        }();
+    </script>
+</html>
