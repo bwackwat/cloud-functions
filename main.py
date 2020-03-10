@@ -28,51 +28,76 @@ def index(request):
     if key != mykey:
         return "Bad key."
 
-    channel_url = None
-    playlist_url = None
-    playlist_id = None
-    channel_json = None
-    playlist_json = None
+
+    data1 = []
+    with open("data1.csv", "r") as f:
+        for line in f.readlines():
+            ldata = line.split(",")
+            # ID, guest in video, season-episode
+            data1.append([ldata[0], ldata[1], ldata[2]])
+    data2 = []
+    with open("data2.csv", "r") as f:
+        for line in f.readlines():
+            ldata = line.split(",")
+            # ID
+            data2.append([ldata[0], ldata[1]])
+    data3 = []
+    with open("data3.csv", "r") as f:
+        for line in f.readlines():
+            ldata = line.split(",")
+            # IDm, season #, [0, next names are people in thumbnail][1 quest in video]
+            data3.append([ldata[0], ldata[1], ldata[2], ldata[3]])
+
+    jresponse = {}
+
     try:
-        channel_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/channels",
+        data1_ids = ",".join([data[0] for data in data1])
+        videos_response = requests.get(
+            "https://www.googleapis.com/youtube/v3/videos",
             params={
                 "key": ytkey,
-                "part": "snippet,contentDetails,statistics,id",
-                "forUsername": username
+                "part": "processingDetails,recordingDetails,fileDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails,suggestions,",
+                "id": data1_ids
             },
             headers={
                 "Accept": "application/json"
             }
         )
-        channel_url = channel_response.request.url
-        channel_json = channel_response.json()
-        playlist_id = channel_json["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-        playlist_response = requests.get(
-            "https://www.googleapis.com/youtube/v3/playlistItems",
-            params={
-                "key": ytkey,
-                "part": "snippet,contentDetails,status,id",
-                "playlistId": playlist_id
-            },
-            headers={
-                "Accept": "application/json"
-            }
-        )
-        playlist_url = playlist_response.request.url
-        playlist_json = playlist_response.json()
+        jresponse["ids"] = data1_ids
+        jresponse["videos_url"] = videos_response.request.url
+        jresponse["videos_json"] = videos_response.json()
+        # channel_response = requests.get(
+        #     "https://www.googleapis.com/youtube/v3/channels",
+        #     params={
+        #         "key": ytkey,
+        #         "part": "snippet,contentDetails,statistics,id",
+        #         "forUsername": username
+        #     },
+        #     headers={
+        #         "Accept": "application/json"
+        #     }
+        # )
+        # channel_url = channel_response.request.url
+        # channel_json = channel_response.json()
+        # playlist_id = channel_json["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        # playlist_response = requests.get(
+        #     "https://www.googleapis.com/youtube/v3/playlistItems",
+        #     params={
+        #         "key": ytkey,
+        #         "part": "snippet,contentDetails,status,id",
+        #         "playlistId": playlist_id
+        #     },
+        #     headers={
+        #         "Accept": "application/json"
+        #     }
+        # )
+        # playlist_url = playlist_response.request.url
+        # playlist_json = playlist_response.json()
+
     except Exception as e:
         return json.dumps(
             {"exception": str(e)},
             indent=4
         )
 
-    jresponse = {
-        "channel_url": channel_url,
-        "playlist_url": playlist_url,
-        "playlist_id": playlist_id,
-        "channel_json": channel_json,
-        "playlist_json": playlist_json
-    }
-
-    return json.dumps(jresponse, indent=4)
+    return "<pre>" + json.dumps(jresponse, indent=4) + "</pre>"
