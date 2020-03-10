@@ -11,7 +11,6 @@ mykey = os.environ.get("mykey")
 def get_videos(ids):
     response = {}
     global ytkey
-    print(ids)
     videos_response = requests.get(
         "https://www.googleapis.com/youtube/v3/videos",
         params={
