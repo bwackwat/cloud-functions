@@ -80,7 +80,9 @@ def index(request):
     global response
 
     #data1_ids = ",".join([data1[i][0] for i in range(10)])
-    data1_ids = ",".join([data1[i][0] for i in range(50)])
+    data1_ids = ",".join([data[0] for data in data1])
+    print(data1_ids)
+    exit()
     #response["ids"] = data1[0][0]
     #data1_ids = ",".join([data[0] for data in data1])
     #response["videos1"] = get_videos(data1[0][0])
