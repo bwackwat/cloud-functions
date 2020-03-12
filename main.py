@@ -35,8 +35,8 @@ def get_videos(data):
             episode = data[index][2].split("-")
             response.append({
                 "guest": data[index][1],
-                "season": episode[0],
-                "episode": episode[1],
+                "season": episode[0].strip(),
+                "episode": episode[1].strip(),
                 "id": video["id"],
                 "title": video["snippet"]["title"],
                 "statistics": video["statistics"]
