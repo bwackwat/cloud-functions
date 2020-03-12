@@ -9,30 +9,49 @@ global mykey
 mykey = os.environ.get("mykey")
 
 
-def get_videos(ids):
-    response = {}
-    global ytkey
-    videos_response = requests.get(
-        "https://www.googleapis.com/youtube/v3/videos",
-        params={
-            "key": ytkey,
-            "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
-            "id": ids
-        },
-        headers={
-            "Accept": "application/json"
-        }
-    )
-    # response["videos_url"] = videos_response.request.url
-    rjson = videos_response.json()
-    #response["videos_json"] = videos_response.json()
+def get_videos(data):
     response = []
-    for video in rjson["items"]:
-        response.append({
-            "id": video["id"],
-            "title": video["snippet"]["title"],
-            "statistics": video["statistics"]
-        })
+    global ytkey
+    #data_id = ",".join([data[0] for data in data1])
+    remaining = len(data)
+    print(remaining)
+    page_len = 50
+    start = 0
+    end = 50
+    while remaining > 0:
+        print(start)
+        print(end)
+        print(remaining)
+        data_ids = ",".join([data[i][0] for i in range(start, end)])
+        videos_response = requests.get(
+            "https://www.googleapis.com/youtube/v3/videos",
+            params={
+                "key": ytkey,
+                "part": "recordingDetails,snippet,contentDetails,statistics,id,topicDetails,liveStreamingDetails",
+                "id": data_ids
+            },
+            headers={
+                "Accept": "application/json"
+            }
+        )
+        rjson = videos_response.json()
+        for video in rjson["items"]:
+            response.append({
+                "id": video["id"],
+                "title": video["snippet"]["title"],
+                "statistics": video["statistics"]
+            })
+        start = start + 50
+        end = end + 50
+        remaining = remaining - 50
+        if remaining < 50:
+            end = end - (50 - remaining)
+        # print("===========")
+        # print(start)
+        # print(end)
+        # print(remaining)
+    
+
     return response
 
 
@@ -80,13 +99,10 @@ def index(request):
     global response
 
     #data1_ids = ",".join([data1[i][0] for i in range(10)])
-    data1_ids = ",".join([data[0] for data in data1])
-    print(data1_ids)
-    exit()
     #response["ids"] = data1[0][0]
     #data1_ids = ",".join([data[0] for data in data1])
     #response["videos1"] = get_videos(data1[0][0])
-    response["result"] = get_videos(data1_ids)
+    response["result"] = get_videos(data1)
 
     try:
         # channel_response = requests.get(e
