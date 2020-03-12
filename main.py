@@ -32,9 +32,9 @@ def get_videos(data):
         )
         rjson = videos_response.json()
         for index, video in enumerate(rjson["items"]):
-            episode = data[index][2].split("-")
+            episode = data[start + index][2].split("-")
             response.append({
-                "guest": data[index][1],
+                "guest": data[start + index][1],
                 "season": episode[0].strip(),
                 "episode": episode[1].strip(),
                 "id": video["id"],
