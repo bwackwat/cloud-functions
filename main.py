@@ -14,14 +14,10 @@ def get_videos(data):
     global ytkey
     #data_id = ",".join([data[0] for data in data1])
     remaining = len(data)
-    print(remaining)
     page_len = 50
     start = 0
     end = 50
     while remaining > 0:
-        print(start)
-        print(end)
-        print(remaining)
         data_ids = ",".join([data[i][0] for i in range(start, end)])
         videos_response = requests.get(
             "https://www.googleapis.com/youtube/v3/videos",
@@ -35,8 +31,12 @@ def get_videos(data):
             }
         )
         rjson = videos_response.json()
-        for video in rjson["items"]:
+        for index, video in enumerate(rjson["items"]):
+            episode = data[index][2].split("-")
             response.append({
+                "guest": data[index][1],
+                "season": episode[0],
+                "episode": episode[1],
                 "id": video["id"],
                 "title": video["snippet"]["title"],
                 "statistics": video["statistics"]
