@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block title %}Cloud Function Index{% endblock %}
+{% block content %}
+	<h1>Cloud Function Index</h1>
+    <ol>
+        {% for function in functions %}
+            <li><a href="?function={{ function }}&jph2cf_key={{ key }}">{{ function }}</a></li>
+        {% endfor %}
+    </ol>
+{% endblock %}
